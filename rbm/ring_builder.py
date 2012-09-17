@@ -23,7 +23,6 @@ from urllib import quote, unquote
 from time import gmtime, strftime, time
 from os.path import basename, join as pathjoin, getsize
 from swift.common.ring import RingBuilder
-from swift.common.ring.utils import search_devs
 from swift.common.utils import split_path, get_logger, lock_file
 from swift.common.exceptions import LockTimeout, RingBuilderError, \
     RingValidationError
@@ -311,7 +310,7 @@ class RingBuilderMiddleware(object):
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             builder = RingBuilder.get_builder(self.bf_path[builder_type])
             try:
-                search_result = search_devs(builder, str(search_pattern))
+                search_result = builder.search_devs(str(search_pattern))
                 return self.return_response(True, self._get_md5sum(
                                             self.bf_path[builder_type]),
                                             search_result,

@@ -17,16 +17,16 @@ import unittest
 from webob import Request
 import os
 import shutil
-import swift.common.ring.utils
+import swift.common.ring.builder
 import swift.common.utils
-from swift.common.exceptions import LockTimeout, RingFileChanged
+from swift.common.exceptions import LockTimeout
 import cPickle as pickle
 import gzip
 from swift.common.ring import RingBuilder
-from mock import MagicMock, call as mock_call
+from mock import Mock, MagicMock, call as mock_call
 import json
 import errno
-
+from rbm.ring_builder import RingFileChanged
 
 class FakeApp(object):
     def __call__(self, env, start_response):
@@ -59,9 +59,9 @@ class FakedBuilder(object):
 class TestRingBuilder(unittest.TestCase):
 
     def setUp(self):
-        self.real_search_devs = swift.common.ring.utils.search_devs
+        self.real_search_devs = RingBuilder.search_devs
         self.search_result = {'id': 1, 'weight': 5}
-        swift.common.ring.utils.search_devs = \
+        RingBuilder.search_devs = \
             MagicMock(return_value=self.search_result)
         self.real_lock_file = swift.common.utils.lock_file
         swift.common.utils.lock_file = MagicMock()
@@ -84,7 +84,7 @@ class TestRingBuilder(unittest.TestCase):
         pickle.dump = self.real_pickle_dump
         gzip.Gzip = self.real_gzip
         swift.common.utils.lock_file = self.real_lock_file
-        swift.common.ring.utils.search_devs = self.real_search_devs
+        RingBuilder.search_devs = self.real_search_devs
         os.mkdir = self.real_mkdir
 
     def test_head_builder(self):
@@ -717,9 +717,9 @@ class TestRingBuilderComponents(unittest.TestCase):
     def setUp(self):
         tb = FakedBuilder()
         self.mock_builder = tb.create_builder()
-        self.real_search_devs = swift.common.ring.utils.search_devs
+        self.real_search_devs = RingBuilder.search_devs
         self.search_result = {'id': 1, 'weight': 5}
-        swift.common.ring.utils.search_devs = \
+        RingBuilder.search_devs = \
             MagicMock(return_value=self.search_result)
         self.real_lock_file = swift.common.utils.lock_file
         swift.common.utils.lock_file = MagicMock()
@@ -738,7 +738,7 @@ class TestRingBuilderComponents(unittest.TestCase):
         pickle.dump = self.real_pickle_dump
         gzip.Gzip = self.real_gzip
         swift.common.utils.lock_file = self.real_lock_file
-        swift.common.ring.utils.search_devs = self.real_search_devs
+        RingBuilder.search_devs = self.real_search_devs
         os.mkdir = self.real_mkdir
 
     def test_http_unauthorized_response_return(self):
@@ -1060,6 +1060,7 @@ class TestRingBuilderComponents(unittest.TestCase):
         self.app.handle_post.side_effect = RingFileChanged
         result = self.app.post({'PATH_INFO': '/ringbuilder/object/add'},
                                start_response, 'something')
+        print result
         self.assertTrue(result == ['Builder md5sum differs\r\n'])
         start_response.assert_has_calls(mock_call('409 Conflict',
                                                   [('Content-Length', '24'),
@@ -1272,7 +1273,7 @@ class TestRingBuilderComponents(unittest.TestCase):
         self.app = ring_builder.RingBuilderMiddleware(FakeApp(), {'key': 'a'})
         self.app._get_md5sum = MagicMock(return_value="currenthash")
         #self.app.get_builder = MagicMock(return_value=self.mock_builder)
-        self.assertRaises(RingFileChanged, self.app.verify_current_hash, 'a',
+        self.assertRaises(Exception, self.app.verify_current_hash, 'a',
                           'notvalid')
 
 
