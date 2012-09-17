@@ -8,4 +8,4 @@ simplejson==2.0.9
 xattr==0.4
 nose
 -e git://github.com/openstack/swift.git#egg=swift-dev
-magicmock
+mock
