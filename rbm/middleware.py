@@ -239,7 +239,7 @@ class RingBuilderMiddleware(object):
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             self.verify_current_hash(self.bf_path[builder_type], lasthash)
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             devs_changed = builder.devs_changed
             try:
                 last_balance = builder.get_balance()
@@ -294,7 +294,7 @@ class RingBuilderMiddleware(object):
                   builder.devs
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             current_md5sum = self._get_md5sum(self.bf_path[builder_type])
             return self.return_response(True, current_md5sum, builder.devs,
                                         start_response, env)
@@ -308,7 +308,7 @@ class RingBuilderMiddleware(object):
                   file on disk, and error message or dict of matched devices.
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             try:
                 search_result = builder.search_devs(str(search_pattern))
                 return self.return_response(True, self._get_md5sum(
@@ -331,7 +331,7 @@ class RingBuilderMiddleware(object):
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             self.verify_current_hash(self.bf_path[builder_type], lasthash)
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             if not isinstance(devices, list):
                 return self.return_response(False, lasthash,
                                             'Malformed request.',
@@ -366,7 +366,7 @@ class RingBuilderMiddleware(object):
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             self.verify_current_hash(self.bf_path[builder_type], lasthash)
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             for dev_id in dev_weights:
                 sleep()  # so we don't starve/block
                 try:
@@ -393,7 +393,7 @@ class RingBuilderMiddleware(object):
         """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             self.verify_current_hash(self.bf_path[builder_type], lasthash)
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             try:
                 modified = False
                 for dev_id in dev_meta:
@@ -421,7 +421,7 @@ class RingBuilderMiddleware(object):
         """ Handle a add device post """
         with lock_file(self.bf_path[builder_type], timeout=1, unlink=False):
             self.verify_current_hash(self.bf_path[builder_type], lasthash)
-            builder = RingBuilder.get_builder(self.bf_path[builder_type])
+            builder = RingBuilder.load(self.bf_path[builder_type])
             ring_modified = False
             try:
                 for device in body['devices']:

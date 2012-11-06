@@ -22,7 +22,7 @@ look as follows::
     use = egg:swift#proxy
 
     [filter:ring_builder]
-    use = egg:swift#ring_builder
+    use = egg:rbm#rbm
     key = myringpasskey
     # directory where to create backups
     backup_dir = /etc/swift/backups
