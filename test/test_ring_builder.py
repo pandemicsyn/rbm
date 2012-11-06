@@ -215,7 +215,7 @@ class TestRingBuilder(unittest.TestCase):
     def test_rb_search_account(self):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/account/search', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -228,13 +228,13 @@ class TestRingBuilder(unittest.TestCase):
                                                 ('Content-Type',
                                                  'application/json')])
         bf = '/etc/swift/account.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertEquals(resp, ['{"id": 1, "weight": 5}'])
 
     def test_rb_search_container(self):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/container/search', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -247,13 +247,13 @@ class TestRingBuilder(unittest.TestCase):
                                                 ('Content-Type',
                                                  'application/json')])
         bf = '/etc/swift/container.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertEquals(resp, ['{"id": 1, "weight": 5}'])
 
     def test_rb_search_object(self):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/object/search', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -266,14 +266,14 @@ class TestRingBuilder(unittest.TestCase):
                                                 ('Content-Type',
                                                  'application/json')])
         bf = '/etc/swift/object.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertEquals(resp, ['{"id": 1, "weight": 5}'])
 
     def test_rb_meta_account(self):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/account/meta', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -283,7 +283,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/account.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['meta'], 'some metainfo')
@@ -292,7 +292,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/container/meta', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -302,7 +302,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/container.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['meta'], 'some metainfo')
@@ -311,7 +311,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/object/meta', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -321,7 +321,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/object.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['meta'], 'some metainfo')
@@ -330,7 +330,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/account/weight', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -340,7 +340,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/account.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['weight'], 5.0)
@@ -349,7 +349,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/container/weight', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -359,7 +359,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/container.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['weight'], 5.0)
@@ -368,7 +368,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/object/weight', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -378,7 +378,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/object.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 1:
                 self.assertEquals(dev['weight'], 5.0)
@@ -387,7 +387,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/account/remove', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -397,7 +397,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/account.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 0:
                 self.assertTrue(dev['weight'] == 0)
@@ -406,7 +406,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/container/remove', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -416,7 +416,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/container.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 0:
                 self.assertTrue(dev['weight'] == 0)
@@ -425,7 +425,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/object/remove', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -435,7 +435,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/object.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         for dev in self.mock_builder.devs:
             if dev['id'] == 0:
                 self.assertTrue(dev['weight'] == 0)
@@ -462,7 +462,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/account/add', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -478,7 +478,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/account.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertTrue(len(self.mock_builder.devs) == 7)
         self.assertTrue(_dev_in_builder(self.mock_builder, field='meta',
                                         match='test1'))
@@ -515,7 +515,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
         req = Request.blank('/ringbuilder/container/add', environ=req_env)
         req.method = 'POST'
         req.content_type = 'application/json'
@@ -531,7 +531,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/container.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertTrue(len(self.mock_builder.devs) == 7)
         self.assertTrue(_dev_in_builder(self.mock_builder, field='meta',
                                         match='test1'))
@@ -568,7 +568,7 @@ class TestRingBuilder(unittest.TestCase):
         req_env = {'HTTP_X_RING_BUILDER_KEY': 'something',
                    'HTTP_X_RING_BUILDER_LAST_HASH': 'newhash'}
         start_response = MagicMock(return_value="MOCKED")
-        RingBuilder.get_builder = MagicMock(return_value=self.mock_builder)
+        RingBuilder.load = MagicMock(return_value=self.mock_builder)
 
         req = Request.blank('/ringbuilder/object/add', environ=req_env)
         req.method = 'POST'
@@ -585,7 +585,7 @@ class TestRingBuilder(unittest.TestCase):
         start_response.assert_called_once_with('200 OK', [('X-Current-Hash',
                                                            'newhash')])
         bf = '/etc/swift/object.builder'
-        RingBuilder.get_builder.assert_called_once_with(bf)
+        RingBuilder.load.assert_called_once_with(bf)
         self.assertTrue(len(self.mock_builder.devs) == 7)
         self.assertTrue(_dev_in_builder(self.mock_builder, field='meta',
                                         match='test1'))
@@ -619,7 +619,7 @@ class TestRingBuilder(unittest.TestCase):
                              'port': int(port), 'device': device_name,
                              'weight': weight, 'meta': meta})
         builder.get_ring = MagicMock()
-        RingBuilder.get_builder = MagicMock(return_value=builder)
+        RingBuilder.load = MagicMock(return_value=builder)
         req = Request.blank('/ringbuilder/account/rebalance', environ=req_env)
         req.method = 'POST'
         req.body = ""
@@ -655,7 +655,7 @@ class TestRingBuilder(unittest.TestCase):
                              'port': int(port), 'device': device_name,
                              'weight': weight, 'meta': meta})
         builder.get_ring = MagicMock()
-        RingBuilder.get_builder = MagicMock(return_value=builder)
+        RingBuilder.load = MagicMock(return_value=builder)
         req = Request.blank('/ringbuilder/container/rebalance',
                             environ=req_env)
         req.method = 'POST'
@@ -693,7 +693,7 @@ class TestRingBuilder(unittest.TestCase):
                              'port': int(port), 'device': device_name,
                              'weight': weight, 'meta': meta})
         builder.get_ring = MagicMock()
-        RingBuilder.get_builder = MagicMock(return_value=builder)
+        RingBuilder.load = MagicMock(return_value=builder)
         req = Request.blank('/ringbuilder/object/rebalance', environ=req_env)
         req.method = 'POST'
         req.body = ""
